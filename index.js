@@ -35,7 +35,7 @@ app.post('/api/users',(req,res)=>{
     if(err){
       console.error(err);
     }
-    console.log(data);
+    res.send(data);
   });  
 })
 
