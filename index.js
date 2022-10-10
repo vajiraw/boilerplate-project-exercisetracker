@@ -43,7 +43,7 @@ app.post('/api/users',(req,res)=>{
 
 // this method retrives all reords
 app.get('/api/users',(req,res)=>{
-  user.find((err,data)=>{
+  User.find((err,data)=>{
     //console.log(data);
     res.send(data)
   })
