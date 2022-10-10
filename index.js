@@ -37,9 +37,7 @@ app.post('/api/users',(req,res)=>{
     if(err){
       console.error(err);
     }
-    res.json({'username':user.username,
-              'id':user._id
-      });
+    res.send(data);
   });  
 })
 
@@ -95,7 +93,7 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
     //           'date' : exDate,//exercise.date,              
     // });
 
-
+    
   })
 
 
