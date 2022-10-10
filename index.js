@@ -37,7 +37,9 @@ app.post('/api/users',(req,res)=>{
     if(err){
       console.error(err);
     }
-    res.send(data);
+    res.json({'username':user.username,
+              'id':user._id
+      });
   });  
 })
 
@@ -80,20 +82,18 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
     //res.send(data._id)
 
 
-    Exercise.
-    findById(id).
-    populate('user').
+    User.
+    findById(_id).
+    populate('execercise').
     exec(function (err, exercise1) {
     if (err) console.log(err);
     console.log('The  is %s', exercise1);    
-    res.json({'username':exercise1.user.username,
-              'desdription':exercise1.description,
-              'duration': exercise1.duration,
-              'id': id,
-              'date' : exDate,//exercise.date,
-              
-    });
-    
+    // res.json({'username':exercise1.user.username,
+    //           'desdription':exercise1.description,
+    //           'duration': exercise1.duration,
+    //           'id': id,
+    //           'date' : exDate,//exercise.date,              
+    // });
 
 
   })

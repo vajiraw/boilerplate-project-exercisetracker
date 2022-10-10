@@ -2,15 +2,18 @@ let mongoose = require('mongoose')
 const { Schema } = mongoose;
 
 let userSchema = mongoose.Schema({
-    username: {type:String}
+    username: {type:String},
+    exercises: [{
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'Exercise'
+      }]
 })
 
 let user = mongoose.model('User',userSchema)
 
 //exercises 
 let exerciseSchema = mongoose.Schema({
-    userid:{type:Schema.ObjectId},
-    user: { type: Schema.ObjectId, ref: 'User' },
+    userid:{type:Schema.ObjectId},   
     description: {type:String},
     duration:Number,
     date: Date
