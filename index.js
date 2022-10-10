@@ -10,7 +10,7 @@ const { Schema } = mongoose;
 const {User,Exercise} = require('./user')
 //const user = require('./user')
 
-mongoose.connect(`mongodb+srv://${process.env.USER}:${process.env.PASS}@cluster0.ipvtxd6.mongodb.net/?retryWrites=true&w=majority`)
+mongoose.connect(`mongodb+srv://kassw:March@cluster0.ipvtxd6.mongodb.net/?retryWrites=true&w=majority`)
         .then(()=>{console.log('connected');})
         .catch((err)=>{console.log(err);})
 
