@@ -42,7 +42,7 @@ app.post('/api/users',(req,res)=>{
 })
 
 // this method retrives all reords
-app.get('/api/users',(req,res)=>{
+app.get('/api/users',(req,res)=>{   
   User.find((err,data)=>{
     //console.log(data);
     res.send(data)
@@ -56,21 +56,23 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
   let description = req.body.description
   let duration = req.body.duration
   let date = req.body.date
-  // if(req.body.date===""){
-  //     date =  new Date()
-  // }
-  req.body.date === ""?date = new Date(): date = req.body.date;    
-  //console.log(description,duration,date);
 
-  //let n = new Schema.Types.ObjectId(_id)
+  req.body.date === ""?date = new Date(): date = req.body.date;    
+  let y = date.getUTCFullYear();
+  let m = date.getUTCMonth() + 1;
+  let d = date.getUTCDate();
+  let exDate = y +'-'+m+'-'+d 
+  console.log(exDate);
   let exercise =  new Exercise(
     {
     'user' : _id,    
     'description' : description,
     'duration' : parseInt(duration),
-    'date' : new Date(date)
+    'date' : exDate
   })
   console.log(exercise);
+
+  
   let id = exercise._id;
   exercise.save((err,data)=>{
     if(err){console.log(err);}
@@ -85,10 +87,11 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
     if (err) console.log(err);
     console.log('The  is %s', exercise1);    
     res.json({'username':exercise1.user.username,
-              'desdription':exercise.description,
-              'duration': exercise.duration,
-              'date' : exercise.date,
-              'id': id
+              'desdription':exercise1.description,
+              'duration': exercise1.duration,
+              'id': id,
+              'date' : exDate,//exercise.date,
+              
     });
     
 
