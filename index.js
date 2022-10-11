@@ -76,8 +76,6 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
   //  data.date2 = '2000-12-12'
   //   
     User.findById(_id,(err,userdata)=>{
-     // console.log(userData);
-
       res.json({        
         username: userdata.username,
         description:data.description,
@@ -85,10 +83,7 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
         date : data.date.toDateString(),             
         id: _id,        
       })
-    })
-    
-
-  
+    })  
   })
     
 

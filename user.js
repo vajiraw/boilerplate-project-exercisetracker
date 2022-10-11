@@ -3,10 +3,10 @@ const { Schema } = mongoose;
 
 let userSchema = mongoose.Schema({    
     username: {type:String},    
-    // exercises: [{
-    //     type: mongoose.Schema.Types.ObjectId, 
-    //     ref: 'Exercise'
-    // }]
+    exercises: [{
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'Exercise'
+    }]
 })
 
 let user = mongoose.model('User',userSchema)
