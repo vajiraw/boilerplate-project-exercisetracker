@@ -78,13 +78,12 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
     User.findById(_id,(err,userdata)=>{
      // console.log(userData);
 
-      res.json({
-        id: _id,
+      res.json({        
         username: userdata.username,
-        date : data.date.toDateString(),        
-        duration: data.duration,
         description:data.description,
-        
+        duration: data.duration,
+        date : data.date.toDateString(),             
+        id: _id,        
       })
     })
     
