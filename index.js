@@ -70,23 +70,18 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
   })
   exercise.save((err,data)=>{
     if(err) console.log(err);
+   let user =  User.findById(_id, (err, docs)=>{
+     if(err) console.error(err)
 
-  let u = User.findById(_id)
-     .populate("exercises")
-     .exec(function(err,d) {
-       if(err) console.error(err);
-
-      let ex= [];
-      
-      Exercise.find({'user': d._id}, (err,dc)=>{
-        if(err)console.error(err);
-        for(let i=0;i<dc.length ;i++){
-          d.exercises.push(dc[i])
-        }
-        console.log(' dc  '+d);
-      })  
-     }
-     )
+     res.json({'username': docs.username,
+      'description': data.description,
+      'duration' : data.duration,
+      'date' : data.date.toDateString(),
+      '_id': _id
+    })
+  
+  })
+  
 
    
   
