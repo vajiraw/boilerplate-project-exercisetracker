@@ -57,7 +57,7 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
   let duration = req.body.duration
   let date = req.body.date
 
-  req.body.date === ""?date = new Date(): date = req.body.date;    
+  req.body.date === ""?date = new Date(): date =  new Date(req.body.date);    
   let exDate = dateformatter(date)
 
   let exercise =  new Exercise(
