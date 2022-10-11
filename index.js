@@ -5,8 +5,8 @@ require('dotenv').config()
 const bodyParser = require('body-parser')
 
 //const User = require('./user')
-const { default: mongoose } = require('mongoose')
-const { Schema } = mongoose;
+const { default: mongoose, Mongoose } = require('mongoose')
+const { Schema,Types } = mongoose;
 const {User,Exercise} = require('./user')
 //const user = require('./user')
 
@@ -58,53 +58,39 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
   let date = req.body.date
 
   req.body.date === ""?date = new Date(): date = req.body.date;    
-  let y = date.getUTCFullYear();
-  let m = date.getUTCMonth() + 1;
-  let d = date.getUTCDate();
-  let exDate = y +'-'+m+'-'+d 
-  console.log(exDate);
+  let exDate = dateformatter(date)
+
   let exercise =  new Exercise(
     {
-    'user' : _id,    
+    'user' : (_id),    
     'description' : description,
     'duration' : parseInt(duration),
     'date' : exDate
   })
-  console.log(exercise);
-
-  
-  let id = exercise._id;
   exercise.save((err,data)=>{
-    if(err){console.log(err);}
-    id = data._id;
-    //res.send(data._id)
-
-
-    User.
-    findById(_id).
-    populate('execercise').
-    exec(function (err, exercise1) {
-    if (err) console.log(err);
-    console.log('The  is %s', exercise1);    
-    // res.json({'username':exercise1.user.username,
-    //           'desdription':exercise1.description,
-    //           'duration': exercise1.duration,
-    //           'id': id,
-    //           'date' : exDate,//exercise.date,              
-    // });
-
+    if(err) console.log(err);
+    console.log(data);
+  })
     
+
+  function dateformatter(date) {
+    let y = date.getUTCFullYear()
+    let m = date.getUTCMonth() + 1
+    let d = date.getUTCDate()
+    let exDate = y + '-' + m + '-' + d
+    console.log(exDate)
+    return exDate
+  }
   })
 
 
 
-  })
+  
 
 
   
     
   
-})
 
 
 
