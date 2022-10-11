@@ -59,10 +59,11 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
 
   req.body.date === ""?date = new Date(): date =  new Date(req.body.date);    
   let exDate = dateformatter(date)
-
+  var did = mongoose.Types.ObjectId(_id);
+  //let did = new Schema.Types.ObjectId(_id)
   let exercise =  new Exercise(
     {
-    'user' : (_id),    
+    'user' : (did),    
     'description' : description,
     'duration' : parseInt(duration),
     'date' : exDate
@@ -70,21 +71,33 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
   exercise.save((err,data)=>{
     if(err) console.log(err);
 
-    //console.log(data);
-   // data.date = dateformatter(data.date)
-  //  delete data.date;
-  //  data.date2 = '2000-12-12'
-  //   
-    User.findById(_id,(err,userdata)=>{
-      res.json({        
-        username: userdata.username,
-        description:data.description,
-        duration: data.duration,
-        date : data.date.toDateString(),             
-        id: _id,        
-      })
-    })  
-  })
+  let u = User.findById(_id)
+     .populate("exercises")
+     .exec(function(err,d) {
+       if(err) console.error(err);
+
+      let ex= [];
+      
+      Exercise.find({'user': d._id}, (err,dc)=>{
+        if(err)console.error(err);
+        for(let i=0;i<dc.length ;i++){
+          d.exercises.push(dc[i])
+        }
+        console.log(' dc  '+d);
+      })  
+     }
+     )
+
+   
+  
+   
+  });
+
+  
+
+
+     
+  
     
 
   function dateformatter(date) {

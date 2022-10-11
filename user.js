@@ -4,17 +4,15 @@ const { Schema } = mongoose;
 let userSchema = mongoose.Schema({    
     username: {type:String},    
     exercises: [{
-        type: mongoose.Schema.Types.ObjectId, 
+        type: mongoose.Types.ObjectId, 
         ref: 'Exercise'
     }]
 })
 
-let user = mongoose.model('User',userSchema)
-
 //exercises 
 let exerciseSchema = mongoose.Schema({
     user: { 
-        type: String, 
+        type: mongoose.Types.ObjectId, 
         ref: 'User' 
       }, 
     description: {type:String},
@@ -22,6 +20,7 @@ let exerciseSchema = mongoose.Schema({
     date: Date
 })
 
+let user = mongoose.model('User',userSchema)
 let exercise = mongoose.model('Exercise',exerciseSchema)
 
 module.exports = {User:user,Exercise:exercise};
