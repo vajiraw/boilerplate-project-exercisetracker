@@ -69,7 +69,27 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
   })
   exercise.save((err,data)=>{
     if(err) console.log(err);
-    console.log(data);
+
+    //console.log(data);
+   // data.date = dateformatter(data.date)
+  //  delete data.date;
+  //  data.date2 = '2000-12-12'
+  //   
+    User.findById(_id,(err,userdata)=>{
+     // console.log(userData);
+
+      res.json({
+        id: _id,
+        username: userdata.username,
+        date : data.date.toDateString(),        
+        duration: data.duration,
+        description:data.description,
+        
+      })
+    })
+    
+
+  
   })
     
 
