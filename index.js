@@ -99,34 +99,38 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
     let errorMsg = null;
     
     console.log(from,to,limit);
+    console.log('logs');
 
     if(_id ==""){
       res.send("Invalid request")
     }
     // from to limit validatons
-
     User.findById(mongoose.Types.ObjectId(_id),(err,userdata)=>{
       if(err) console.error(err);
 
         let exer = [];
+        userdata.count = 233
         Exercise.find({'user':mongoose.Types.ObjectId(_id)},(err,exedata) =>{
           if(err) res.json({'error':'Error Occured'})
-          //console.log('exer: '+data);
-          //let count = data.length;
-          //console.log('couont:::  '+count);
+          
+          let e = [];
+          exedata.forEach((item)=>{            
+            e.push(new Exercise({'description':item.description,'duration':item.duration,'date':item.date.toDateString()}))
+            //userdata.exercises.push(e)              
+          })
 
-          exedata.forEach((exedata)=>{
-              exer.push({'description':exedata.description, 'duration': exedata.duration,'date':exedata.date.toDateString()})
+          const test = new Log({
+            "id" : _id,
+            "username": userdata.username,
+            "count": exedata.length,
+            
+            "logs" : e            
           })
 
 
-
           //res.json(data)
-          res.json({_id,
-                    'username':userdata.username,
-                    'count': exedata.length,                    
-                    log: exer
-        })
+          //userdata.One = 'Two'
+          res.json(test )
 
 
         })
@@ -137,6 +141,20 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
     })
 
   })
+
+
+  class Log{
+    constructor(_id,name,count,exe){
+      this.id = _id,
+    this.name = name;
+    this.count = count;
+    
+    this.exercise = exe
+  }
+  }
+  
+
+
 
 
 
