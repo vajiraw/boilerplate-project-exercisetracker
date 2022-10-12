@@ -93,7 +93,7 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
 
 
 
-  app.get('/api/users/:_id/logs',  (req,res)=>{
+  app.get('/api/users/:_id/logs', async (req,res)=>{
     const { from, to, limit } = req.query
     const  _id = req.params._id;
     let errorMsg = null;
@@ -105,16 +105,34 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
     }
     // from to limit validatons
 
-    Exercise.find({'user':mongoose.Types.ObjectId(_id)},(err,data) =>{
-      if(err) res.json({'error':'Error Occured'})
-      //console.log('exer: '+data);
-      res.json(data)
-
-    })
-
-
-    User.findById(mongoose.Types.ObjectId(_id),(err,data)=>{
+    User.findById(mongoose.Types.ObjectId(_id),(err,userdata)=>{
       if(err) console.error(err);
+
+        let exer = [];
+        Exercise.find({'user':mongoose.Types.ObjectId(_id)},(err,exedata) =>{
+          if(err) res.json({'error':'Error Occured'})
+          //console.log('exer: '+data);
+          //let count = data.length;
+          //console.log('couont:::  '+count);
+
+          exedata.forEach((exedata)=>{
+              exer.push({'description':exedata.description, 'duration': exedata.duration,'date':exedata.date.toDateString()})
+          })
+
+
+
+          //res.json(data)
+          res.json({'username':userdata.username,
+                    'couunt': exedata.length,
+                    _id,
+                    log: exer
+        })
+
+
+        })
+
+
+    
       //console.log(data);
     })
 
