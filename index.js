@@ -52,7 +52,6 @@ app.get('/api/users',(req,res)=>{
 ///api/users/:_id/exercises
 app.post('/api/users/:_id/exercises',(req,res)=>{
   let {_id} = req.params
-  console.log("id :: "+_id);
   let description = req.body.description
   let duration = req.body.duration
   let date = req.body.date
@@ -60,7 +59,6 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
   req.body.date === ""?date = new Date(): date =  new Date(req.body.date);    
   let exDate = dateformatter(date)
   var did = mongoose.Types.ObjectId(_id);
-  //let did = new Schema.Types.ObjectId(_id)
   let exercise =  new Exercise(
     {
     'user' : (did),    
@@ -80,27 +78,15 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
       '_id': _id
     })
   
-  })
-  
-
-   
-  
+  }) 
    
   });
-
-  
-
-
-     
-  
-    
 
   function dateformatter(date) {
     let y = date.getUTCFullYear()
     let m = date.getUTCMonth() + 1
     let d = date.getUTCDate()
     let exDate = y + '-' + m + '-' + d
-    console.log(exDate)
     return exDate
   }
   })
