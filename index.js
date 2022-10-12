@@ -123,7 +123,7 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
 
           //res.json(data)
           res.json({'username':userdata.username,
-                    'couunt': exedata.length,
+                    'count': exedata.length,
                     _id,
                     log: exer
         })
