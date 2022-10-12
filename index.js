@@ -93,6 +93,35 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
 
 
 
+  app.get('/api/users/:_id/logs',  (req,res)=>{
+    const { from, to, limit } = req.query
+    const  _id = req.params._id;
+    let errorMsg = null;
+    
+    console.log(from,to,limit);
+
+    if(_id ==""){
+      res.send("Invalid request")
+    }
+    // from to limit validatons
+
+    Exercise.find({'user':mongoose.Types.ObjectId(_id)},(err,data) =>{
+      if(err) res.json({'error':'Error Occured'})
+      //console.log('exer: '+data);
+      res.json(data)
+
+    })
+
+
+    User.findById(mongoose.Types.ObjectId(_id),(err,data)=>{
+      if(err) console.error(err);
+      //console.log(data);
+    })
+
+  })
+
+
+
   
 
 
