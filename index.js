@@ -94,22 +94,28 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
 
 
   app.get('/api/users/:_id/logs', async (req,res)=>{
-    const { from, to, limit } = req.query
+    let { from, to, limit } = req.query
     const  _id = req.params._id;
     let errorMsg = null;
     
     console.log(from,to,limit);
-    console.log('logs');
 
     if(_id ==""){
       res.send("Invalid request")
     }
+
+    if(from || isNaN(from)){
+      console.log('Ddate vaidatioin ');
+    }
+    
+    if(limit==="" || isNaN(limit) ) 
+      limit = 100
     // from to limit validatons
     User.findById(mongoose.Types.ObjectId(_id),(err,userdata)=>{
       if(err) console.error(err);
-
-        userdata.count = 233
-        Exercise.find({'user':mongoose.Types.ObjectId(_id)},(err,exedata) =>{
+      let q = Exercise.find({'user': mongoose.Types.ObjectId(_id),date:{ "$lt": to},date:{ "$gte": from}}).limit(limit)
+      
+      q.exec((err,exedata) =>{
           if(err) res.json({'error':'Error Occured'})
           
           let e = [];
@@ -133,22 +139,6 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
     })
 
   })
-
-  
-
-
-
-
-
-  
-
-
-  
-    
-  
-
-
-
 
 const listener = app.listen(process.env.PORT || 3000, () => {
   console.log('Your app is listening on port ' + listener.address().port)
