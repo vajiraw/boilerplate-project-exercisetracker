@@ -108,50 +108,32 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
     User.findById(mongoose.Types.ObjectId(_id),(err,userdata)=>{
       if(err) console.error(err);
 
-        let exer = [];
         userdata.count = 233
         Exercise.find({'user':mongoose.Types.ObjectId(_id)},(err,exedata) =>{
           if(err) res.json({'error':'Error Occured'})
           
           let e = [];
           exedata.forEach((item)=>{            
-            e.push(new Exercise({'description':item.description,'duration':item.duration,'date':item.date.toDateString()}))
-            //userdata.exercises.push(e)              
+            const exL ={
+              'description': item.description,
+              'duration':item.duration,
+              'date':item.date.toDateString()
+            }
+            e.push(exL)
           })
-
-          const test = new Log({
-            "id" : _id,
-            "username": userdata.username,
-            "count": exedata.length,
-            
-            "logs" : e            
-          })
-
-
-          //res.json(data)
-          //userdata.One = 'Two'
-          res.json(test )
-
-
+          
+          const u = {
+            _id: _id,
+            username: userdata.username,
+            count: exedata.length,
+            log: e
+          };          
+          res.json(u)
         })
-
-
-    
-      //console.log(data);
     })
 
   })
 
-
-  class Log{
-    constructor(_id,name,count,exe){
-      this.id = _id,
-    this.name = name;
-    this.count = count;
-    
-    this.exercise = exe
-  }
-  }
   
 
 
