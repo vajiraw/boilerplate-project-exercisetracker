@@ -103,9 +103,13 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
     if(_id ==""){
       res.send("Invalid request")
     }
+    
+    if(from==="" || isNaN(new Date(from))){
+      res.send('Invalid Date')
+    }
 
-    if(from || isNaN(from)){
-      console.log('Ddate vaidatioin ');
+    if(to==="" || isNaN(new Date(to))){
+      res.send('Invalid Date')
     }
     
     if(limit==="" || isNaN(limit) ) 
