@@ -4,11 +4,9 @@ const cors = require('cors')
 require('dotenv').config()
 const bodyParser = require('body-parser')
 
-//const User = require('./user')
 const { default: mongoose, Mongoose } = require('mongoose')
 const { Schema,Types } = mongoose;
 const {User,Exercise} = require('./user')
-//const user = require('./user')
 
 mongoose.connect(`mongodb+srv://kassw:March@cluster0.ipvtxd6.mongodb.net/?retryWrites=true&w=majority`)
         .then(()=>{console.log('connected');})
@@ -96,24 +94,24 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
   app.get('/api/users/:_id/logs', async (req,res)=>{
     let { from, to, limit } = req.query
     const  _id = req.params._id;
-    let errorMsg = null;
+    //let errorMsg = null;
     
     console.log(from,to,limit);
 
-    if(_id ==""){
-      res.send("Invalid request")
-    }
-    
-    if(from==="" || isNaN(new Date(from))){
-      res.send('Invalid Date')
-    }
+    if(_id ==''){
+     // errorMsg = 'Invalid request'
+     return res.json({'Error': 'Invalid request'})
 
-    if(to==="" || isNaN(new Date(to))){
-      res.send('Invalid Date')
-    }
+    }else if(from==='' || isNaN(new Date(from)) ||  (to==='' || isNaN(new Date(to)))){
+      //errorMsg = 'Invalid Date'
+      return res.json({'Error': 'Invalid Date'})
+    } 
     
-    if(limit==="" || isNaN(limit) ) 
-      limit = 100
+    else if(limit==="" || isNaN(limit) ) {
+      //errorMsg = 'Invalid limit'  // limit = 100
+      return res.json({'Error': 'Invalid limit'})
+    }
+     
     // from to limit validatons
     User.findById(mongoose.Types.ObjectId(_id),(err,userdata)=>{
       if(err) console.error(err);
