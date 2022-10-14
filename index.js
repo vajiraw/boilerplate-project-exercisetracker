@@ -90,31 +90,46 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
   })
 
 
+  function dateValidation(date){
+    
+    //regEx = /dddd-dd-dd/
+    //console.log('valid:: ');
+    
+  }
 
   app.get('/api/users/:_id/logs', async (req,res)=>{
     let { from, to, limit } = req.query
     const  _id = req.params._id;
     //let errorMsg = null;
-    
+    let total = null;
+    dateValidation(from)
     console.log(from,to,limit);
 
-    if(_id ==''){
+    if(!_id ){
+
      // errorMsg = 'Invalid request'
      return res.json({'Error': 'Invalid request'})
 
-    }else if(from==='' || isNaN(new Date(from)) ||  (to==='' || isNaN(new Date(to)))){
+    }else if(!from || isNaN(new Date(from)) ||  (to==='' || isNaN(new Date(to)))){
       //errorMsg = 'Invalid Date'
       return res.json({'Error': 'Invalid Date'})
     } 
     
-    else if(limit==="" || isNaN(limit) ) {
+    else if(limit==="" || isNaN(limit) ) { 
       //errorMsg = 'Invalid limit'  // limit = 100
       return res.json({'Error': 'Invalid limit'})
     }
      
     // from to limit validatons
     User.findById(mongoose.Types.ObjectId(_id),(err,userdata)=>{
-      if(err) console.error(err);
+
+      if(err) return res.json({'Error': err});
+
+      Exercise.find({'user': mongoose.Types.ObjectId(_id),date:{ "$lt": to},date:{ "$gte": from}}).count() .exec((err,data)=>{
+        console.log('count:  '+data);
+        total = data;
+      })
+
       let q = Exercise.find({'user': mongoose.Types.ObjectId(_id),date:{ "$lt": to},date:{ "$gte": from}}).limit(limit)
       
       q.exec((err,exedata) =>{
@@ -133,7 +148,8 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
           const u = {
             _id: _id,
             username: userdata.username,
-            count: exedata.length,
+           // count: exedata.length,
+            count:total,
             log: e
           };          
           res.json(u)
