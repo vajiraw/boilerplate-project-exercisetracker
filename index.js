@@ -102,22 +102,22 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
     const  _id = req.params._id;
     //let errorMsg = null;
     let total = null;
-    dateValidation(from)
+    //dateValidation(from)
     console.log(from,to,limit);
 
-    if(!_id ){
+    datefrom = from !== undefined ? new Date(from) : null
+    console.log(datefrom);
 
-     // errorMsg = 'Invalid request'
+    dateto = from !== undefined ? new Date(to) : null
+    console.log(dateto);
+
+    limit = parseInt(limit)
+    console.log("L "+limit);
+
+    if (from && to ) {
+    if(!_id ){
      return res.json({'Error': 'Invalid request'})
 
-    }else if(!from || isNaN(new Date(from)) ||  (to==='' || isNaN(new Date(to)))){
-      //errorMsg = 'Invalid Date'
-      return res.json({'Error': 'Invalid Date'})
-    } 
-    
-    else if(limit==="" || isNaN(limit) ) { 
-      //errorMsg = 'Invalid limit'  // limit = 100
-      return res.json({'Error': 'Invalid limit'})
     }
      
     // from to limit validatons
@@ -125,12 +125,12 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
 
       if(err) return res.json({'Error': err});
 
-      Exercise.find({'user': mongoose.Types.ObjectId(_id),date:{ "$lt": to},date:{ "$gte": from}}).count() .exec((err,data)=>{
+      Exercise.find({'user': mongoose.Types.ObjectId(_id),date:{ "$lt": to},date:{ "$gte": datefrom}}).count() .exec((err,data)=>{
         console.log('count:  '+data);
         total = data;
       })
 
-      let q = Exercise.find({'user': mongoose.Types.ObjectId(_id),date:{ "$lt": to},date:{ "$gte": from}}).limit(limit)
+      let q = Exercise.find({'user': mongoose.Types.ObjectId(_id),date:{ "$lte": to},date:{ "$gte": from}}).limit(limit)
       
       q.exec((err,exedata) =>{
           if(err) res.json({'error':'Error Occured'})
@@ -144,7 +144,7 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
             }
             e.push(exL)
           })
-          
+          console.log(total);
           const u = {
             _id: _id,
             username: userdata.username,
@@ -155,6 +155,7 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
           res.json(u)
         })
     })
+  }
 
   })
 
