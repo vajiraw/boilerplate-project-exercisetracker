@@ -105,38 +105,46 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
     //dateValidation(from)
     console.log(from,to,limit);
 
-    datefrom = from !== undefined ? new Date(from) : null
-    console.log(datefrom);
+    from = from !== undefined ? new Date(from) : null
+    // //return res.json('Error : Invalid Date')
 
-    dateto = from !== undefined ? new Date(to) : null
-    console.log(dateto);
+    to = to !== undefined ? new Date(to) : null
+    // //return res.json('Error : Invalid Date')
 
-    limit = parseInt(limit)
-    console.log("L "+limit);
+    
+     
 
-    if (from && to ) {
-    if(!_id ){
-     return res.json({'Error': 'Invalid request'})
-
-    }
+    // if (to && from) {
+   
+        console.log('valid ');
+     
      
     // from to limit validatons
     User.findById(mongoose.Types.ObjectId(_id),(err,userdata)=>{
 
       if(err) return res.json({'Error': err});
+      if(userdata)  {
 
-      Exercise.find({'user': mongoose.Types.ObjectId(_id),date:{ "$lt": to},date:{ "$gte": datefrom}}).count() .exec((err,data)=>{
-        console.log('count:  '+data);
-        total = data;
-      })
-
-      let q = Exercise.find({'user': mongoose.Types.ObjectId(_id),date:{ "$lte": to},date:{ "$gte": from}}).limit(limit)
+      //let q = Exercise.find({'user': mongoose.Types.ObjectId(_id),date:{ "$lte": to},date:{ "$gte": from}}).limit(limit)
       
+      let q = Exercise.find({'user': mongoose.Types.ObjectId(_id)})
       q.exec((err,exedata) =>{
-          if(err) res.json({'error':'Error Occured'})
+          if(err) return res.json({'error':'Error Occured'})
           
           let e = [];
-          exedata.forEach((item)=>{            
+          console.log('ex length '+exedata.length);
+          let m = null;
+          if(to && from){
+            m = exedata.filter(function(e)  { 
+            if(e.date >= from && e.date <= to)
+            return e}).slice(0, limit)
+          }
+          else{
+            m = exedata;
+            //m = exedata.slice(0, limit)
+          }
+          
+          m.forEach((item)=>{            
             const exL ={
               'description': item.description,
               'duration':item.duration,
@@ -144,18 +152,19 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
             }
             e.push(exL)
           })
-          console.log(total);
+          
           const u = {
             _id: _id,
             username: userdata.username,
            // count: exedata.length,
-            count:total,
+            count:e.length,
             log: e
           };          
           res.json(u)
         })
+      }
     })
-  }
+ // }
 
   })
 
