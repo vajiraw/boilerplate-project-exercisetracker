@@ -60,7 +60,7 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
     date = new Date();
   }
 
-  const dateM = new Date(input.date).toDateString();
+  const dateM = new Date(date).toDateString();
 
   //date = new Date() ; 
   //let exDate = dateformatter(date)
