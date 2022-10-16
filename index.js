@@ -54,18 +54,12 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
   let description = req.body.description
   let duration = req.body.duration
   let date = req.body.date
-
-  console.log('Date : '+date);
   if(!date){
     date = new Date();
   }
 
   const dateM = new Date(date).toDateString();
 
-  //date = new Date() ; 
-  //let exDate = dateformatter(date)
-  //let exDate = dateformatter(date)
-  console.log('date '+date);
   var did = mongoose.Types.ObjectId(_id);
   let exercise =  new Exercise(
     {
@@ -76,16 +70,8 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
   })
   exercise.save((err,data)=>{
     if(err) console.log(err);
-    console.log('data details '+data);
+    
    let user =  User.findById(_id, (err, docs)=>{
-    //  if(err) console.error(err)
-    //   let dt = null;
-    //  if(! isNaN(data.date.toDateString())){
-    //     dt = data.date.toDateString();
-    //  }else{
-    //   dt = new Date().toDateString()
-    //  }
-
      res.json({'username': docs.username,
       'description': data.description,
       'duration' : data.duration,
@@ -95,35 +81,9 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
   
   }) 
    
-  });
-
-  function dateformatter(date) {
-    let y = date.getUTCFullYear()
-    let m = date.getUTCMonth() + 1
-    let d = date.getUTCDate()
-    let exDate = y + '-' + m + '-' + d
-    return exDate
-  }
+  }); 
   })
 
-
-  function dateValidation(date){
-        console.log('Date :: '+date);
-    format = 'YYYY-MM-DD';
-    if(moment(date, format, true).isValid()){ // true
-      return true
-    }
-    return false  
-  }
-
-  function dvalidate(date){
-    var arr1 = date.split('-');
-    arr1.forEach((e)=>{
-      if(!isNaN(e))        
-        return true;
-      return false;  
-    })
-  }
   app.get('/api/users/:_id/logs', async (req,res)=>{
     let { from, to, limit } = req.query
     const  _id = req.params._id;
@@ -132,16 +92,7 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
     from = from !== undefined ? new Date(from) : null
     to = to !== undefined ? new Date(to) : null
 
-    console.log(from,to);
-
-    // if(!(dateValidation(from)))
-    //   return res.json({'Error':'Invlid Date'})
-    // if(!(dateValidation(to)))
-    //   return res.json({'Error':'Invlid Date'})
-
-   // if (to && from) {
-
-    // from to limit validatons
+    
     User.findById(mongoose.Types.ObjectId(_id),(err,userdata)=>{
 
       if(err) return res.json({'Error': err});
