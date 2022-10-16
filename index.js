@@ -92,14 +92,11 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
 
 
   function dateValidation(date){
-    // console.log('valid:: 1' +date);
-    // var date = new Date(date);
-    // if(date instanceof Date && !isNaN(date.valueOf()));
-    // console.log('valid:: ');
-    
+        
     format = 'YYYY-MM-DD';
-    if(moment(date, format, true).isValid()) // true
+    if(moment(date, format, true).isValid()){ // true
       return true
+    }
     return false  
   }
 
@@ -108,6 +105,9 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
     const  _id = req.params._id;
     let name = null;
     let count = 0;
+    console.log("Data :: "+from , to, limit);
+    dateValidation(from)
+    dateValidation(to)
 
     User.findById(mongoose.Types.ObjectId(_id),(err,userdata)=>{ 
       if(err || (userdata===null)) return res.json({'Error': err}); 
