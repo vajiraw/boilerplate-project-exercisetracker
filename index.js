@@ -78,13 +78,20 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
   })
   exercise.save((err,data)=>{
     if(err) console.log(err);
+    console.log('data details '+data);
    let user =  User.findById(_id, (err, docs)=>{
      if(err) console.error(err)
+      let dt = null;
+     if(! isNaN(data.date.toDateString())){
+        dt = data.date.toDateString();
+     }else{
+      dt = new Date().toDateString()
+     }
 
      res.json({'username': docs.username,
       'description': data.description,
       'duration' : data.duration,
-      'date' : data.date.toDateString(),
+      'date' : dt,
       '_id': _id
     })
   
