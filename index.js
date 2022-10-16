@@ -105,9 +105,16 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
     const  _id = req.params._id;
     let name = null;
     let count = 0;
-    console.log("Data :: "+from , to, limit);
-    console.log('from : '+ dateValidation(from));
-    console.log('To   : '+ dateValidation(to));
+    //const {f,t,l} = null;
+    // console.log("Data :: "+from , to, limit);
+    // console.log('from : '+ dateValidation(from));
+    // console.log('To   : '+ dateValidation(to));
+    const f = from && Date.parse(from);
+    const t = from && Date.parse(to);
+    if(f && t ){
+
+    
+
     
     //dateValidation(to)
 
@@ -135,7 +142,7 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
       }
       )
     })
-
+  }
   })
 
 const listener = app.listen(process.env.PORT || 3000, () => {
