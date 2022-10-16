@@ -56,14 +56,12 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
   let date = req.body.date
 
   console.log('Date : '+date);
+  if(!date){
+    date = new Date();
+  }
 
-  if(req.body.date)
-    date =  new Date(req.body.date)
+  const dateM = new Date(input.date).toDateString();
 
-  if(date==='Invalid Date' || date===""){
-    date =  new Date()
-  }  
-  console.log('Date : '+date);  
   //date = new Date() ; 
   //let exDate = dateformatter(date)
   //let exDate = dateformatter(date)
@@ -74,24 +72,24 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
     'user' : (did),    
     'description' : description,
     'duration' : parseInt(duration),
-    'date' : date
+    'date' : dateM
   })
   exercise.save((err,data)=>{
     if(err) console.log(err);
     console.log('data details '+data);
    let user =  User.findById(_id, (err, docs)=>{
-     if(err) console.error(err)
-      let dt = null;
-     if(! isNaN(data.date.toDateString())){
-        dt = data.date.toDateString();
-     }else{
-      dt = new Date().toDateString()
-     }
+    //  if(err) console.error(err)
+    //   let dt = null;
+    //  if(! isNaN(data.date.toDateString())){
+    //     dt = data.date.toDateString();
+    //  }else{
+    //   dt = new Date().toDateString()
+    //  }
 
      res.json({'username': docs.username,
       'description': data.description,
       'duration' : data.duration,
-      'date' : dt,
+      'date' : data.date.toDateString(),
       '_id': _id
     })
   
