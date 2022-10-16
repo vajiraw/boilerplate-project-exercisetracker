@@ -92,7 +92,7 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
 
 
   function dateValidation(date){
-        
+        console.log('Date :: '+date);
     format = 'YYYY-MM-DD';
     if(moment(date, format, true).isValid()){ // true
       return true
@@ -106,8 +106,10 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
     let name = null;
     let count = 0;
     console.log("Data :: "+from , to, limit);
-    dateValidation(from)
-    dateValidation(to)
+    console.log('from : '+ dateValidation(from));
+    console.log('To   : '+ dateValidation(to));
+    
+    //dateValidation(to)
 
     User.findById(mongoose.Types.ObjectId(_id),(err,userdata)=>{ 
       if(err || (userdata===null)) return res.json({'Error': err}); 
