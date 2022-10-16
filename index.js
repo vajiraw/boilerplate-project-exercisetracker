@@ -100,49 +100,67 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
     return false  
   }
 
+  function dvalidate(date){
+    var arr1 = date.split('-');
+    arr1.forEach((e)=>{
+      if(!isNaN(e))        
+        return true;
+      return false;  
+    })
+  }
+
   app.get('/api/users/:_id/logs', async (req,res)=>{
     let { from, to, limit } = req.query
     const  _id = req.params._id;
-    let name = null;
-    let count = 0;
-    //const {f,t,l} = null;
-    // console.log("Data :: "+from , to, limit);
-    // console.log('from : '+ dateValidation(from));
-    // console.log('To   : '+ dateValidation(to));
-    const f = from && Date.parse(from);
-    const t = from && Date.parse(to);
-    if(f && t ){
+    let fromDate = new Date(from);
+    let toDate = new Date(to);
 
-    
+    //console.log(fromDate , toDate );
+    User.findById(mongoose.Types.ObjectId(_id),(err,userdata)=>{
 
-    
-    //dateValidation(to)
-
-    User.findById(mongoose.Types.ObjectId(_id),(err,userdata)=>{ 
-      if(err || (userdata===null)) return res.json({'Error': err}); 
+      if(err) return res.json({'Error': err});
       if(userdata)  {
-        name = userdata.username;
-      }
-      let logs = null;
-      let q = Exercise.find({'user': mongoose.Types.ObjectId(_id)})
+        let q = Exercise.find({'user': mongoose.Types.ObjectId(_id)})
       q.exec((err,exedata) =>{
-        if(err) {return res.json({'error':'Error Occured'})
-      }else{
-          count = exedata.length
-          let l = exedata;
-          logs = l.map((e)=>({
-            description: e.description,
-            duration : e.duration,
-            date: e.date.toDateString()
-          })
-          )
+          if(err) return res.json({'error':'Error Occured'})
 
-        }
-        res.json({ _id, name, count, logs })
+          let e = [];
+          // let  m = exedata.filter(function(e)  {
+          //   if(e.date >= from && e.date <= to)
+          //   return e}).slice(0, limit|| exedata.length)
+          
+
+          exedata.forEach((item)=>{
+            const exL ={
+              'description': item.description,
+              'duration':item.duration,
+              'date':item.date.toDateString()
+            }
+            e.push(exL)
+          })
+
+          const u = {
+            _id: _id,
+            username: userdata.username,
+            count:e.length,
+            log: e
+          };
+          res.status(200).json(u)
+        })
       }
-      )
+
     })
-  }
+    
+      // find usser
+      //if(user){
+        //get execercises 
+        // if (found) 
+        // validate date from date
+        // validate  date to date
+        // validate limit
+
+        // 
+      //}        
   })
 
 const listener = app.listen(process.env.PORT || 3000, () => {
