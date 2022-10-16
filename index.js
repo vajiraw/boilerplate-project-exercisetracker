@@ -3,6 +3,7 @@ const app = express()
 const cors = require('cors')
 require('dotenv').config()
 const bodyParser = require('body-parser')
+const moment = require('moment')
 
 const { default: mongoose, Mongoose } = require('mongoose')
 const { Schema,Types } = mongoose;
@@ -91,38 +92,36 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
 
 
   function dateValidation(date){
+    // console.log('valid:: 1' +date);
+    // var date = new Date(date);
+    // if(date instanceof Date && !isNaN(date.valueOf()));
+    // console.log('valid:: ');
     
-    //regEx = /dddd-dd-dd/
-    //console.log('valid:: ');
-    
+    format = 'YYYY-MM-DD';
+    if(moment(date, format, true).isValid()) // true
+      return true
+    return false  
   }
 
   app.get('/api/users/:_id/logs', async (req,res)=>{
     let { from, to, limit } = req.query
     const  _id = req.params._id;
-    //let errorMsg = null;
     let total = null;
-    //dateValidation(from)
-    console.log(from,to,limit);
+    if(!(dateValidation(from)))
+      return res.json({'Error':'Invlid Date'})
+    if(!(dateValidation(to)))
+      return res.json({'Error':'Invlid Date'})
+    
 
     from = from !== undefined ? new Date(from) : null
-    // //return res.json('Error : Invalid Date')
-
     to = to !== undefined ? new Date(to) : null
-    // //return res.json('Error : Invalid Date')
 
-    
-     
-
-    // if (to && from) {
+    if (to && from) {
    
-        console.log('valid ');
-     
-     
     // from to limit validatons
-    User.findById(mongoose.Types.ObjectId(_id),(err,userdata)=>{
+    User.findById(mongoose.Types.ObjectId(_id),(err,userdata)=>{ 
 
-      if(err) return res.json({'Error': err});
+      if(err) return res.json({'Error': err}); 
       if(userdata)  {
 
       //let q = Exercise.find({'user': mongoose.Types.ObjectId(_id),date:{ "$lte": to},date:{ "$gte": from}}).limit(limit)
@@ -132,17 +131,11 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
           if(err) return res.json({'error':'Error Occured'})
           
           let e = [];
-          console.log('ex length '+exedata.length);
-          let m = null;
-          if(to && from){
-            m = exedata.filter(function(e)  { 
+          //if(to && from){
+          let  m = exedata.filter(function(e)  { 
             if(e.date >= from && e.date <= to)
-            return e}).slice(0, limit)
-          }
-          else{
-            m = exedata;
-            //m = exedata.slice(0, limit)
-          }
+            return e}).slice(0, limit|| exedata.length)
+          //}
           
           m.forEach((item)=>{            
             const exL ={
@@ -156,7 +149,6 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
           const u = {
             _id: _id,
             username: userdata.username,
-           // count: exedata.length,
             count:e.length,
             log: e
           };          
@@ -164,7 +156,7 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
         })
       }
     })
- // }
+ }
 
   })
 
