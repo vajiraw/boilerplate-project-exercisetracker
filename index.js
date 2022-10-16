@@ -107,14 +107,15 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
     let { from, to, limit } = req.query
     const  _id = req.params._id;
     let total = null;
-    if(!(dateValidation(from)))
-      return res.json({'Error':'Invlid Date'})
-    if(!(dateValidation(to)))
-      return res.json({'Error':'Invlid Date'})
+    
     
 
     from = from !== undefined ? new Date(from) : null
     to = to !== undefined ? new Date(to) : null
+    if(!(dateValidation(from)))
+      return res.json({'Error':'Invlid Date'})
+    if(!(dateValidation(to)))
+      return res.json({'Error':'Invlid Date'})
 
     if (to && from) {
    
