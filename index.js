@@ -107,12 +107,14 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
     let { from, to, limit } = req.query
     const  _id = req.params._id;
     let total = null;
-    let name = userdata.username;
+    let name = null;
     let count = 0;
 
     User.findById(mongoose.Types.ObjectId(_id),(err,userdata)=>{ 
       if(err || (userdata===null)) return res.json({'Error': err}); 
-      if(userdata)  {}
+      if(userdata)  {
+        name = userdata.username;
+      }
 
       let q = Exercise.find({'user': mongoose.Types.ObjectId(_id)})
       q.exec((err,exedata) =>{
