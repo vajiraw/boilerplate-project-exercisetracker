@@ -107,57 +107,26 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
     let { from, to, limit } = req.query
     const  _id = req.params._id;
     let total = null;
-    
-    
+    let name = userdata.username;
+    let count = 0;
 
-    from = from !== undefined ? new Date(from) : null
-    to = to !== undefined ? new Date(to) : null
-    if(!(dateValidation(from)))
-      return res.json({'Error':'Invlid Date'})
-    if(!(dateValidation(to)))
-      return res.json({'Error':'Invlid Date'})
-
-    if (to && from) {
-   
-    // from to limit validatons
     User.findById(mongoose.Types.ObjectId(_id),(err,userdata)=>{ 
+      if(err || (userdata===null)) return res.json({'Error': err}); 
+      if(userdata)  {}
 
-      if(err) return res.json({'Error': err}); 
-      if(userdata)  {
-
-      //let q = Exercise.find({'user': mongoose.Types.ObjectId(_id),date:{ "$lte": to},date:{ "$gte": from}}).limit(limit)
-      
       let q = Exercise.find({'user': mongoose.Types.ObjectId(_id)})
       q.exec((err,exedata) =>{
-          if(err) return res.json({'error':'Error Occured'})
-          
-          let e = [];
-          //if(to && from){
-          let  m = exedata.filter(function(e)  { 
-            if(e.date >= from && e.date <= to)
-            return e}).slice(0, limit|| exedata.length)
-          //}
-          
-          m.forEach((item)=>{            
-            const exL ={
-              'description': item.description,
-              'duration':item.duration,
-              'date':item.date.toDateString()
-            }
-            e.push(exL)
-          })
-          
-          const u = {
-            _id: _id,
-            username: userdata.username,
-            count:e.length,
-            log: e
-          };          
-          res.json(u)
-        })
+        if(err) {return res.json({'error':'Error Occured'})
+      }else{
+          count = exedata.length
+          let l = exedata;
+          console.log('logs :: '+l);
+
+        }
+        res.json({ _id, name, count, exedata })
       }
+      )
     })
- }
 
   })
 
