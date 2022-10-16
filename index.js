@@ -55,7 +55,16 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
   let duration = req.body.duration
   let date = req.body.date
 
-  req.body.date === ""?date = new Date(): date =  new Date(req.body.date);    
+  console.log('Date : '+date);
+
+  if(req.body.date)
+    date =  new Date(req.body.date)
+
+  if(date==='Invalid Date' || date===""){
+    date =  new Date()
+  }  
+  console.log('Date : '+date);  
+  //date = new Date() ; 
   //let exDate = dateformatter(date)
   //let exDate = dateformatter(date)
   console.log('date '+date);
