@@ -106,7 +106,6 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
   app.get('/api/users/:_id/logs', async (req,res)=>{
     let { from, to, limit } = req.query
     const  _id = req.params._id;
-    let total = null;
     let name = null;
     let count = 0;
 
@@ -115,17 +114,22 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
       if(userdata)  {
         name = userdata.username;
       }
-
+      let logs = null;
       let q = Exercise.find({'user': mongoose.Types.ObjectId(_id)})
       q.exec((err,exedata) =>{
         if(err) {return res.json({'error':'Error Occured'})
       }else{
           count = exedata.length
           let l = exedata;
-          console.log('logs :: '+l);
+          logs = l.map((e)=>({
+            description: e.description,
+            duration : e.duration,
+            date: e.date.toDateString()
+          })
+          )
 
         }
-        res.json({ _id, name, count, exedata })
+        res.json({ _id, name, count, logs })
       }
       )
     })
