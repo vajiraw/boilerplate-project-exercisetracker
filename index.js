@@ -92,7 +92,15 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
     from = from !== undefined ? new Date(from) : null
     to = to !== undefined ? new Date(to) : null
 
-    
+
+    // if(!(dateValidation(from)))
+    //   return res.json({'Error':'Invlid Date'})
+    // if(!(dateValidation(to)))
+    //   return res.json({'Error':'Invlid Date'})
+
+   // if (to && from) {
+
+    // from to limit validatons
     User.findById(mongoose.Types.ObjectId(_id),(err,userdata)=>{
 
       if(err) return res.json({'Error': err});
