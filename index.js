@@ -108,29 +108,52 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
       return false;  
     })
   }
-
   app.get('/api/users/:_id/logs', async (req,res)=>{
     let { from, to, limit } = req.query
     const  _id = req.params._id;
-    let fromDate = new Date(from);
-    let toDate = new Date(to);
+    let total = null;
 
-    //console.log(fromDate , toDate );
+    from = from !== undefined ? new Date(from) : null
+    to = to !== undefined ? new Date(to) : null
+
+    console.log(from,to);
+
+    // if(!(dateValidation(from)))
+    //   return res.json({'Error':'Invlid Date'})
+    // if(!(dateValidation(to)))
+    //   return res.json({'Error':'Invlid Date'})
+
+   // if (to && from) {
+
+    // from to limit validatons
     User.findById(mongoose.Types.ObjectId(_id),(err,userdata)=>{
 
       if(err) return res.json({'Error': err});
       if(userdata)  {
-        let q = Exercise.find({'user': mongoose.Types.ObjectId(_id)})
+
+      //let q = Exercise.find({'user': mongoose.Types.ObjectId(_id),date:{ "$lte": to},date:{ "$gte": from}}).limit(limit)
+
+      let q = Exercise.find({'user': mongoose.Types.ObjectId(_id)})
       q.exec((err,exedata) =>{
           if(err) return res.json({'error':'Error Occured'})
 
           let e = [];
-          // let  m = exedata.filter(function(e)  {
-          //   if(e.date >= from && e.date <= to)
-          //   return e}).slice(0, limit|| exedata.length)
-          
+          let  m =  null;
+          if(to && from){
+           m = exedata.filter(function(e)  {
+            if(e.date >= from && e.date <= to)
+            return e}).slice(0, limit|| exedata.length)
+          }else if(from){
+            m = exedata.filter(function(e)  {
+              if(e.date >= from)
+              return e}).slice(0, limit|| exedata.length)
+          }
+          else{
+             m = exedata.slice(0, limit|| exedata.length)
+          }
 
-          exedata.forEach((item)=>{
+
+          m.forEach((item)=>{
             const exL ={
               'description': item.description,
               'duration':item.duration,
@@ -145,23 +168,14 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
             count:e.length,
             log: e
           };
-          res.status(200).json(u)
+          res.json(u)
         })
       }
-
     })
-    
-      // find usser
-      //if(user){
-        //get execercises 
-        // if (found) 
-        // validate date from date
-        // validate  date to date
-        // validate limit
+ //}
 
-        // 
-      //}        
   })
+
 
 const listener = app.listen(process.env.PORT || 3000, () => {
   console.log('Your app is listening on port ' + listener.address().port)
