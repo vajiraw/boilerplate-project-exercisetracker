@@ -56,14 +56,16 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
   let date = req.body.date
 
   req.body.date === ""?date = new Date(): date =  new Date(req.body.date);    
-  let exDate = dateformatter(date)
+  //let exDate = dateformatter(date)
+  //let exDate = dateformatter(date)
+  console.log('date '+date);
   var did = mongoose.Types.ObjectId(_id);
   let exercise =  new Exercise(
     {
     'user' : (did),    
     'description' : description,
     'duration' : parseInt(duration),
-    'date' : exDate
+    'date' : date
   })
   exercise.save((err,data)=>{
     if(err) console.log(err);
