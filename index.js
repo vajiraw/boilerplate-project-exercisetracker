@@ -9,7 +9,7 @@ const { default: mongoose, Mongoose } = require('mongoose')
 const { Schema,Types } = mongoose;
 const {User,Exercise} = require('./user')
 
-mongoose.connect(`mongodb+srv://kassw:March@cluster0.ipvtxd6.mongodb.net/?retryWrites=true&w=majority`)
+mongoose.connect(`mongodb+srv://u:p@cluster0.ipvtxd6.mongodb.net/?retryWrites=true&w=majority`)
         .then(()=>{console.log('connected');})
         .catch((err)=>{console.log(err);})
 
@@ -78,11 +78,10 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
       'date' : data.date.toDateString(),
       '_id': _id
     })
-  
   }) 
    
   }); 
-  })
+})
 
   app.get('/api/users/:_id/logs', async (req,res)=>{
     let { from, to, limit } = req.query
@@ -92,15 +91,6 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
     from = from !== undefined ? new Date(from) : null
     to = to !== undefined ? new Date(to) : null
 
-
-    // if(!(dateValidation(from)))
-    //   return res.json({'Error':'Invlid Date'})
-    // if(!(dateValidation(to)))
-    //   return res.json({'Error':'Invlid Date'})
-
-   // if (to && from) {
-
-    // from to limit validatons
     User.findById(mongoose.Types.ObjectId(_id),(err,userdata)=>{
 
       if(err) return res.json({'Error': err});
@@ -127,7 +117,6 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
              m = exedata.slice(0, limit|| exedata.length)
           }
 
-
           m.forEach((item)=>{
             const exL ={
               'description': item.description,
@@ -147,8 +136,6 @@ app.post('/api/users/:_id/exercises',(req,res)=>{
         })
       }
     })
- //}
-
   })
 
 
